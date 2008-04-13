@@ -1,4 +1,5 @@
 #include <StarGraphics/StarApplication.h>
+#include <StarInput.h>
 
 namespace Star
 {
@@ -20,12 +21,15 @@ namespace Star
     setupVideo();
     init();
     while(!m_finish) {
+      processEvents();
+      g_StarMouse.updateState();
       idle();
       render(0);
       swapBuffer();
       m_currentFrame++;
     }
     quit();
+    delete &g_StarMouse;
     exitVideo();
     return m_exitCode;
   }

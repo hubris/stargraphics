@@ -32,6 +32,11 @@ namespace Star
      * Swap front & back buffer
      */
     virtual void swapBuffer();
+
+    /**
+     * Process default events (quit,resize...)
+     */
+    virtual void processEvents();
   };
 }
 

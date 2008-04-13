@@ -50,4 +50,22 @@ namespace Star
     SDL_GL_SwapBuffers();
   }
 
+  /*******************************************************************************/
+  void
+  ApplicationSDL::processEvents()
+  {
+    SDL_Event event;
+    while(SDL_PollEvent(&event)) {
+      switch(event.type){
+      case SDL_QUIT:
+        halt(0);
+        break;
+      case SDL_VIDEORESIZE:
+      {
+        resizeEvent(event.resize.w, event.resize.h);
+        break;
+      }
+      }
+    }
+  }
 }

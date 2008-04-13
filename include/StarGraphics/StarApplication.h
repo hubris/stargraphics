@@ -71,6 +71,16 @@ namespace Star
      */
     virtual void swapBuffer() = 0;
 
+    /**
+     * Called when window change its size
+     */
+    virtual void resizeEvent(int width, int height) {}
+
+    /**
+     * Process default events (quit,resize...)
+     */
+    virtual void processEvents() = 0;
+
     int m_width, m_height;
     bool m_fullscreen;
     std::string m_name;
