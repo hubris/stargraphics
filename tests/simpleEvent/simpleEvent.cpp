@@ -2,6 +2,8 @@
 
 #include <GL/gl.h>
 
+#include <iostream>
+
 /******************************************************************************/
 SimpleEvent::SimpleEvent(int resx, int resy, const std::string& name,
               bool fullscreen) : ApplicationSDL(resx, resy, name, fullscreen)
