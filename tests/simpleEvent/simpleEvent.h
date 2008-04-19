@@ -10,7 +10,7 @@ public:
   SimpleEvent(int resx, int resy, const std::string& name,
               bool fullscreen = false);
 
-  void render(float elapsedTime);
+  void render(double elapsedTime);
 
   virtual void mouseMoved(const Star::MouseMoveEvent& e);
 };

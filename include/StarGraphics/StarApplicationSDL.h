@@ -13,12 +13,6 @@ namespace Star
 
   protected:
     /**
-     * Render the frame
-     * @param elapsedTime is the time in second neeeded to render last frame
-     */
-    virtual void render(float elapsedTime) = 0;
-
-    /**
      * Create and display the screen
      */
     virtual void setupVideo();

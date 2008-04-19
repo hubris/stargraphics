@@ -13,7 +13,7 @@ SimpleEvent::SimpleEvent(int resx, int resy, const std::string& name,
 
 /******************************************************************************/
 void
-SimpleEvent::render(float elapsedTime)
+SimpleEvent::render(double elapsedTime)
 {
    glClearColor(0, 1, 0, 1);
    glClear(GL_COLOR_BUFFER_BIT);

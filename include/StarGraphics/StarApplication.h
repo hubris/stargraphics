@@ -1,6 +1,8 @@
 #ifndef STARAPPLICATION_H
 #define STARAPPLICATION_H
 
+#include <StarUtils/StarTimer.h>
+
 #include <string>
 
 namespace Star
@@ -15,9 +17,6 @@ namespace Star
      * Start the main loop
      */
     virtual int run();
-
-
-//     float getFPS() { return fps; }
 
     /**
      * If set to true the application is run in fullscreen
@@ -44,7 +43,7 @@ namespace Star
      * Render the frame
      * @param elapsedTime is the time in second neeeded to render last frame
      */
-    virtual void render(float elapsedTime) = 0;
+    virtual void render(double elapsedTime) = 0;
 
     /**
      * Called before each frame
@@ -81,20 +80,44 @@ namespace Star
      */
     virtual void processEvents() = 0;
 
+    /**
+     * Process default events (quit,resize...)
+     */
+    float getFps() const;
+
+    /** Screen dimensions */
     int m_width, m_height;
+
+    /** True if fullscreen mode*/
     bool m_fullscreen;
+
+    /** Application name */
     std::string m_name;
 
   private:
+    /**
+     * Update the fps evaluation.
+     * Fps is computed every second
+     */
+    void updateFpsCounter();
+
+    /** Stop the main loop */
     bool m_finish;
 
+    /** Value returned by run()*/
     int m_exitCode;
 
+    /** The current frame number */
     unsigned int m_currentFrame;
-//     static const int NEEDEDFRAMES = 20;
-//     float m_fps;
-//     float m_renderTime;
-//     Timer m_timer;
+
+    /** Time elapsed since last fps computation */
+    Star::Timer m_elapsedTime;
+
+    /** Number of frame rendered since last fps computation */
+    unsigned int m_numFrameRendered;
+
+    /** Fps */
+    float m_fps;
   };
 }
 

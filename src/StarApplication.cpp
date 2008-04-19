@@ -18,19 +18,46 @@ namespace Star
   int
   Application::run()
   {
+    Star::Timer timer;
+    double previousRenderTime = 0;
     setupVideo();
     init();
+    m_elapsedTime.start();
     while(!m_finish) {
+      timer.start();
       processEvents();
       g_StarMouse.updateState();
       idle();
-      render(0);
+      render(previousRenderTime);
       swapBuffer();
-      m_currentFrame++;
+      updateFpsCounter();
+      previousRenderTime = timer.getElapsedSeconds();
     }
     quit();
     delete &g_StarMouse;
     exitVideo();
     return m_exitCode;
+  }
+
+  /*******************************************************************************/
+  float
+  Application::getFps() const
+  {
+    return m_fps;
+  }
+
+  /*******************************************************************************/
+  void
+  Application::updateFpsCounter()
+  {
+    m_currentFrame++;
+    m_numFrameRendered++;
+    float elp = m_elapsedTime.getElapsedSeconds();
+    if ( elp >= 1.0f )
+    {
+      m_fps = m_numFrameRendered/elp;
+      m_elapsedTime.start();
+      m_numFrameRendered = 0;
+    }
   }
 }
