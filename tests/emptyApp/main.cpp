@@ -2,7 +2,7 @@
 
 #include <StarUtils/StarExceptions.h>
 
-int main()
+int main(int argc, char** argv)
 {
   EmptyApp* app = NULL;
   try
@@ -15,4 +15,6 @@ int main()
   }
 
   delete app;
+
+  return 0;
 }

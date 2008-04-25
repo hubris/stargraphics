@@ -21,7 +21,6 @@ include(FindSDL)
 include_directories(${SDL_INCLUDE_DIR})
 
 add_subdirectory(src)
-add_subdirectory(include)
 
 add_subdirectory(tests)
 

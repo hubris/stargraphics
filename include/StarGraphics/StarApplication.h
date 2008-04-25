@@ -1,6 +1,10 @@
 #ifndef STARAPPLICATION_H
 #define STARAPPLICATION_H
 
+#ifdef _WIN32
+#include <windows.h>
+#endif
+
 #include <StarUtils/StarTimer.h>
 
 #include <string>
