@@ -3,6 +3,8 @@
 
 #ifdef _WIN32
 #include <windows.h>
+#else
+typedef int HINSTANCE;
 #endif
 
 #include <StarUtils/StarTimer.h>
@@ -98,6 +100,9 @@ namespace Star
     /** Application name */
     std::string m_name;
 
+    /** hinstance for windows */
+    HINSTANCE m_hInstance;
+
   private:
     /**
      * Update the fps evaluation.
@@ -124,5 +129,10 @@ namespace Star
     float m_fps;
   };
 }
+
+/**
+ * This function must be defined by the user application
+ */
+extern Star::Application *createApplication(int argc, char** argv, HINSTANCE hInst);
 
 #endif

@@ -1,5 +1,6 @@
 #include <StarGraphics/StarApplication.h>
 #include <StarInput.h>
+#include <StarUtils/StarExceptions.h>
 
 namespace Star
 {
@@ -60,4 +61,32 @@ namespace Star
       m_numFrameRendered = 0;
     }
   }
+}
+
+#if WIN32
+INT WINAPI
+WinMain( HINSTANCE hInst, HINSTANCE, LPSTR, INT nCmdShow)
+{
+  Star::Application* app = NULL;
+  try
+  {
+    app = createApplication(0, NULL, hInst);    
+#else
+int
+main(int argc, char** argv)
+{  
+  Star::Application* app = NULL;
+  try
+  {
+    app = createApplication(argc, argv, 0);
+#endif
+    app->run();
+  } catch(Star::Exception& e)
+  {
+    e.show();
+  }
+
+  delete app;
+
+  return 0;
 }

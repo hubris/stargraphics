@@ -17,6 +17,9 @@ endif(${CMAKE_SOURCE_DIR} STREQUAL ${CMAKE_BINARY_DIR})
 include(FindDoxygen)
 include(FindSDL)
 
+if(WIN32)
+  add_definitions(/DNOMINMAX)
+endif(WIN32)
 
 include_directories(${SDL_INCLUDE_DIR})
 

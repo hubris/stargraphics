@@ -2,19 +2,8 @@
 
 #include <StarUtils/StarExceptions.h>
 
-int main(int argc, char** argv)
-{
-  EmptyApp* app = NULL;
-  try
-  {
-    app = new EmptyApp(800, 600, "EmptyApp");
-    app->run();
-  } catch(Star::Exception& e)
-  {
-    e.show();
-  }
-
-  delete app;
-
-  return 0;
+Star::Application*
+createApplication(int argc, char** argv, HINSTANCE hInst)
+{ 
+  return new EmptyApp(800, 600, "EmptyApp");   
 }
