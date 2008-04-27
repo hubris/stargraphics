@@ -1,6 +1,8 @@
 #include <StarGraphics/StarApplicationDX10.h>
 
+#include <StarGraphics/StarRenderDeviceDX10.h>
 #include <StarUtils/StarExceptions.h>
+#include <StarInput/StarMouse.h>
 #include <cassert>
 
 namespace Star
@@ -48,6 +50,7 @@ namespace Star
   {
     assert(s_instance == NULL);
     m_hInstance= hInst;
+    s_instance = this;
 
     HINSTANCE inst = m_hInstance;
     registerClass(name);	
@@ -55,13 +58,27 @@ namespace Star
                           WS_OVERLAPPEDWINDOW, CW_USEDEFAULT, 
                           CW_USEDEFAULT, resx, resy, NULL, NULL, inst, NULL);
     if(!m_hWnd)
-      throw Exception("Window::RegisterClass: Window creation failed!\n");		
+      throw Exception("Window::RegisterClass: Window creation failed!\n");	
+    g_StarMouse.init(m_hWnd, hInst);
   }
 
   /*******************************************************************************/
   void
   ApplicationDX10::setupVideo()
   {   
+    showWindow();
+    m_renderDevice = m_renderDeviceDX10 = new RenderDeviceDX10(m_hWnd);    
+    m_renderDeviceDX10->createSwapChain(m_width, m_height);
+    m_renderDeviceDX10->createRenderTargetView();
+
+    D3D10_VIEWPORT vp;
+    vp.Width = m_width;
+    vp.Height = m_height;
+    vp.MinDepth = 0.0f;
+    vp.MaxDepth = 1.0f;
+    vp.TopLeftX = 0;
+    vp.TopLeftY = 0;
+    m_renderDeviceDX10->getD3dDevice()->RSSetViewports(1, &vp);
   }
 
   /*******************************************************************************/
@@ -74,6 +91,7 @@ namespace Star
   void
   ApplicationDX10::swapBuffer()
   {
+    m_renderDeviceDX10->present();
   }
 
   /*******************************************************************************/

@@ -1,4 +1,5 @@
 #include <StarGraphics/StarApplication.h>
+#include <StarGraphics/StarRenderDevice.h>
 #include <StarInput.h>
 #include <StarUtils/StarExceptions.h>
 
@@ -7,13 +8,20 @@ namespace Star
   /*******************************************************************************/
   Application::Application(int resx, int resy, const std::string& name,
                            bool fullscreen)
-    : m_width(resx), m_height(resy), m_name(name),
+    : m_renderDevice(NULL),
+      m_width(resx), m_height(resy), m_name(name),
       m_finish(false), m_exitCode(0),
       m_currentFrame(0)
   {
     setFullscreen(fullscreen);
   }
 
+  /*******************************************************************************/
+  Application::~Application()
+  {
+    delete m_renderDevice;
+    m_renderDevice = NULL;
+  }
 
   /*******************************************************************************/
   int
@@ -63,7 +71,7 @@ namespace Star
   }
 }
 
-#if WIN32
+#ifdef WIN32
 INT WINAPI
 WinMain( HINSTANCE hInst, HINSTANCE, LPSTR, INT nCmdShow)
 {
@@ -71,15 +79,30 @@ WinMain( HINSTANCE hInst, HINSTANCE, LPSTR, INT nCmdShow)
   try
   {
     app = createApplication(0, NULL, hInst);    
-#else
+    app->run();
+  } catch(Star::Exception& e)
+  {
+    e.show();
+  }
+
+  delete app;
+
+  return 0;
+}
+#endif
+
+#ifdef main
+#undef main
+#endif
 int
 main(int argc, char** argv)
 {  
   Star::Application* app = NULL;
   try
   {
-    app = createApplication(argc, argv, 0);
-#endif
+    HINSTANCE hInstance = (HINSTANCE) GetModuleHandle (NULL);
+    app = createApplication(argc, argv, hInstance);
+
     app->run();
   } catch(Star::Exception& e)
   {

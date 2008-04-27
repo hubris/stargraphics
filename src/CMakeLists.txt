@@ -1,16 +1,16 @@
 set(StarGraphicsSDL_SOURCES StarApplicationSDL.cpp)
 set(HEADERS_SDL ../include/StarGraphics/StarApplicationSDL.h)
 
-set(HEADERS ../include/StarGraphics/StarApplication.h)
+set(HEADERS ../include/StarGraphics/StarApplication.h
+            ../include/StarGraphics/StarRenderDevice.h)
 
 if(WIN32)
-  set(HEADERS_DX10 ../include/StarGraphics/StarApplicationDX10.h)
-  set(StarGraphicsDX10_SOURCES StarApplicationDX10.cpp)
+  set(HEADERS_DX10 ../include/StarGraphics/StarApplicationDX10.h
+                   ../include/StarGraphics/StarRenderDeviceDX10.h)
+  set(StarGraphicsDX10_SOURCES StarApplicationDX10.cpp StarRenderDeviceDX10.cpp)
 
   include_directories($ENV{DXSDK_DIR}/Include)
   link_directories($ENV{DXSDK_DIR}/Lib)
-
-  set(D3D10_LIB d3d10)
 endif(WIN32)
 
 source_group(Headers\\StarGraphics FILES ${HEADERS} ${HEADERS_SDL} ${HEADERS_DX10})

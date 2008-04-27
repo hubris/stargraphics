@@ -13,11 +13,13 @@ typedef int HINSTANCE;
 
 namespace Star
 {
+  class RenderDevice;
+
   class Application
   {
   public:
     Application(int resx, int resy, const std::string& name, bool fullscreen = false);
-    virtual ~Application() {}
+    virtual ~Application();
 
     /**
      * Start the main loop
@@ -91,6 +93,9 @@ namespace Star
      */
     float getFps() const;
 
+    /** The render device */
+    RenderDevice* m_renderDevice;
+
     /** Screen dimensions */
     int m_width, m_height;
 
@@ -134,5 +139,9 @@ namespace Star
  * This function must be defined by the user application
  */
 extern Star::Application *createApplication(int argc, char** argv, HINSTANCE hInst);
+extern int main(int argc, char** argv);
+#ifdef WIN32
+extern INT WINAPI WinMain( HINSTANCE hInst, HINSTANCE, LPSTR, INT nCmdShow);
+#endif
 
 #endif

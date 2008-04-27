@@ -1,2 +1,3 @@
 add_subdirectory(emptyApp)
 add_subdirectory(simpleEvent)
+add_subdirectory(simpleEventDX10)

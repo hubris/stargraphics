@@ -2,6 +2,7 @@
 #define STARAPPLICATIONDX10_H
 
 #include <StarGraphics/StarApplication.h>
+#include <StarGraphics/StarRenderDeviceDX10.h>
 #include <windows.h>
 
 namespace Star
@@ -36,6 +37,9 @@ namespace Star
 
     /** The window handle */
     HWND m_hWnd;
+        
+    /** DX10 render device*/
+    RenderDeviceDX10* m_renderDeviceDX10;
 
   private:    
     /** Display the window */
