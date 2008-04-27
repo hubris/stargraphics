@@ -46,17 +46,19 @@ namespace Star
   ApplicationDX10::ApplicationDX10(HINSTANCE hInst, int resx, int resy,
                                    const std::string& name,
                                    bool fullscreen)
-    : Application(resx, resy, name, fullscreen)
+    : Application(resx, resy, name, fullscreen), m_renderDeviceDX10(NULL)
   {
     assert(s_instance == NULL);
     m_hInstance= hInst;
     s_instance = this;
 
-    HINSTANCE inst = m_hInstance;
-    registerClass(name);	
-    m_hWnd = CreateWindow(name.c_str(), name.c_str(), 
-                          WS_OVERLAPPEDWINDOW, CW_USEDEFAULT, 
-                          CW_USEDEFAULT, resx, resy, NULL, NULL, inst, NULL);
+    registerClass(name);
+    DWORD style = WS_OVERLAPPEDWINDOW;
+    if(m_fullscreen)
+      style = WS_EX_TOPMOST|WS_POPUP;
+    m_hWnd = CreateWindowEx(0, name.c_str(), name.c_str(), 
+                            style, 0, 0, resx, resy, NULL, 
+                            NULL, m_hInstance, NULL);
     if(!m_hWnd)
       throw Exception("Window::RegisterClass: Window creation failed!\n");	
     g_StarMouse.init(m_hWnd, hInst);
@@ -66,19 +68,11 @@ namespace Star
   void
   ApplicationDX10::setupVideo()
   {   
-    showWindow();
     m_renderDevice = m_renderDeviceDX10 = new RenderDeviceDX10(m_hWnd);    
-    m_renderDeviceDX10->createSwapChain(m_width, m_height);
+    m_renderDeviceDX10->createSwapChain(m_width, m_height, m_fullscreen);
     m_renderDeviceDX10->createRenderTargetView();
-
-    D3D10_VIEWPORT vp;
-    vp.Width = m_width;
-    vp.Height = m_height;
-    vp.MinDepth = 0.0f;
-    vp.MaxDepth = 1.0f;
-    vp.TopLeftX = 0;
-    vp.TopLeftY = 0;
-    m_renderDeviceDX10->getD3dDevice()->RSSetViewports(1, &vp);
+    resizeEvent(m_width, m_height);
+    showWindow();
   }
 
   /*******************************************************************************/
@@ -98,6 +92,10 @@ namespace Star
   LRESULT CALLBACK
   ApplicationDX10::wndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
   {
+    //Init is not finished
+    if(!m_renderDeviceDX10)
+      return DefWindowProc(hWnd, msg, wParam, lParam);
+
     switch(msg) {
       case WM_CLOSE:
         halt(0);			
@@ -108,12 +106,17 @@ namespace Star
         halt(0);			
         PostQuitMessage(0);
         break;
-      case WM_SIZE:
+      case WM_SIZE: {
+        int resX = LOWORD(lParam);
+        int resY = HIWORD(lParam);
         if(wParam == SIZE_MINIMIZED)
-          break;
+          break;        
         //getAppInstance()->resetD3DDevice();
-        resizeEvent(LOWORD(lParam), HIWORD(lParam));
+        if(!m_fullscreen)
+          m_renderDeviceDX10->resizeSwapChain(resX, resY);
+        resizeEvent(resX, resY);
         break;
+        }
       default:
         return DefWindowProc(hWnd, msg, wParam, lParam);
     }
@@ -130,5 +133,19 @@ namespace Star
       TranslateMessage( &msg );
       DispatchMessage( &msg );
     }
+  }
+   
+  /***************************************************************************/
+  void
+  ApplicationDX10::resizeEvent(int width, int height)
+  {        
+    D3D10_VIEWPORT vp;
+    vp.Width = width;
+    vp.Height = height;
+    vp.MinDepth = 0.0f;
+    vp.MaxDepth = 1.0f;
+    vp.TopLeftX = 0;
+    vp.TopLeftY = 0;
+    m_renderDeviceDX10->getD3dDevice()->RSSetViewports(1, &vp);
   }
 }

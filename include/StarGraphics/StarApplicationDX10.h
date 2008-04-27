@@ -16,6 +16,12 @@ namespace Star
 
   protected:
     /**
+     * Called when window change its size.
+     * Reset the viewport.
+     */
+    virtual void resizeEvent(int width, int height);
+
+    /**
      * Create and display the screen
      */
     virtual void setupVideo();

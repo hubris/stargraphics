@@ -21,7 +21,7 @@ namespace Star {
     virtual ~RenderDeviceDX10();
 
     /** Create the swap chain */
-    void createSwapChain(int resX, int resY);
+    void createSwapChain(int resX, int resY, bool fullscreen);
 
     /** Create and set the default render target view */
     void createRenderTargetView();
@@ -35,7 +35,13 @@ namespace Star {
     /** Clear with specified color */
     void clearRenderTargetView(const float4& color);
 
-  private:    
+    /** Resize the swap chain */
+    void resizeSwapChain(int resX, int resY);
+
+  private:
+    /** Release the target view */
+    void releaseTargetView();
+
     ID3D10Device* m_d3dDevice;
     IDXGISwapChain* m_swapChain;
     HWND m_hWnd;

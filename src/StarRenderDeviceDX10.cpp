@@ -30,7 +30,7 @@ namespace Star {
 
   /***************************************************************************/
   void
-  RenderDeviceDX10::createSwapChain(int resX, int resY)
+  RenderDeviceDX10::createSwapChain(int resX, int resY, bool fullscreen)
   {        
     DXGI_SWAP_CHAIN_DESC sd;
     ZeroMemory( &sd, sizeof(sd) );
@@ -41,17 +41,30 @@ namespace Star {
     sd.BufferDesc.RefreshRate.Numerator = 60;
     sd.BufferDesc.RefreshRate.Denominator = 1;
     sd.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
+    sd.Windowed = !fullscreen;
     sd.OutputWindow = m_hWnd;
     sd.SampleDesc.Count = 1;
     sd.SampleDesc.Quality = 0;
-    sd.Windowed = TRUE;
 
     IDXGIFactory * pFactory;
     HRESULT hr = CreateDXGIFactory(__uuidof(IDXGIFactory), (void**)(&pFactory) );
 
     if(FAILED(pFactory->CreateSwapChain(m_d3dDevice, &sd, &m_swapChain)))
       throw Exception("RenderDeviceDX10::createSwapChain: Creating swap chain failed!\n");
-    pFactory->Release();
+    pFactory->Release();    
+  }
+
+  /***************************************************************************/
+  void
+  RenderDeviceDX10::resizeSwapChain(int resX, int resY)
+  {        
+    HRESULT hr;
+    releaseTargetView();
+    hr = m_swapChain->ResizeBuffers(1, resX, resY, DXGI_FORMAT_R8G8B8A8_UNORM, 0 );
+       
+    if(FAILED(hr))
+      throw Exception("RenderDeviceDX10::resizeSwapChain: Swap chain ResizeBuffers failed!\n");
+    createRenderTargetView();
   }
 
   /***************************************************************************/
@@ -69,6 +82,15 @@ namespace Star {
     if(FAILED(hr))
       throw Exception("RenderDeviceDX10::createRenderTargetView: Creating render target view failed!\n");
     m_d3dDevice->OMSetRenderTargets( 1, &m_renderTargetView, NULL );
+  }
+
+  /***************************************************************************/
+  void
+  RenderDeviceDX10::releaseTargetView()
+  {        
+    m_d3dDevice->OMSetRenderTargets( 0, NULL, NULL );
+    m_renderTargetView->Release();
+    m_renderTargetView = NULL;
   }
 
   /***************************************************************************/
