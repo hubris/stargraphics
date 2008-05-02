@@ -2,7 +2,7 @@
 #define STARRENDERDEVICE_H
 
 namespace Star {
-  class RenderDevice 
+  class RenderDevice
   {
   public:    
     virtual ~RenderDevice() {}

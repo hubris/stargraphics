@@ -62,13 +62,15 @@ namespace Star
     if(!m_hWnd)
       throw Exception("Window::RegisterClass: Window creation failed!\n");	
     g_StarMouse.init(m_hWnd, hInst);
+    g_StarRenderDeviceDX10.init(m_hWnd);
   }
 
   /*******************************************************************************/
   void
   ApplicationDX10::setupVideo()
   {   
-    m_renderDevice = m_renderDeviceDX10 = new RenderDeviceDX10(m_hWnd);    
+    //m_renderDevice = m_renderDeviceDX10 = new RenderDeviceDX10(m_hWnd);    
+    m_renderDevice = m_renderDeviceDX10 = &g_StarRenderDeviceDX10;    
     m_renderDeviceDX10->createSwapChain(m_width, m_height, m_fullscreen);
     m_renderDeviceDX10->createRenderTargetView();
     resizeEvent(m_width, m_height);
@@ -79,6 +81,8 @@ namespace Star
   void
   ApplicationDX10::exitVideo()
   {
+    g_StarRenderDeviceDX10.destroy();
+    m_renderDevice = m_renderDeviceDX10 = NULL;
   }
 
   /*******************************************************************************/

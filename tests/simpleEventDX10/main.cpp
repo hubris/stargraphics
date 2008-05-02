@@ -5,5 +5,5 @@
 Star::Application*
 createApplication(int argc, char** argv, HINSTANCE hInst)
 { 
-  return new SimpleEventDX10(hInst, 800, 600, "EmptyApp");   
+  return new SimpleEventDX10(hInst, 800, 600, "EmptyApp", true);   
 }

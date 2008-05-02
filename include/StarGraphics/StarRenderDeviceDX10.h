@@ -3,17 +3,22 @@
 
 #include <StarGraphics/StarRenderDevice.h>
 #include <StarMath/StarVec4.h>
+#include <StarUtils/StarSingleton.h>
 
 #include <d3d10.h>
 
 namespace Star {
-  class RenderDeviceDX10 : public RenderDevice
+  class RenderDeviceDX10 : public RenderDevice, public Singleton<RenderDeviceDX10>
   {
-  public:
+  public:  
+    /**Constructor*/    
+    RenderDeviceDX10();
+
     /**
-     * Create a d3d10 device
-     */
-    RenderDeviceDX10(HWND hWnd);
+     * Init the d3d10 device. Must be called
+     * before everything else.
+     */      
+    void init(HWND hWnd);
 
     /**
      * Destructor
@@ -48,5 +53,7 @@ namespace Star {
     ID3D10RenderTargetView* m_renderTargetView;
   };
 }
+
+#define g_StarRenderDeviceDX10 (*Star::RenderDeviceDX10::getInstance())
 
 #endif

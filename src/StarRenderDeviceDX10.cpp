@@ -4,17 +4,23 @@
 
 namespace Star {
   /***************************************************************************/
-  RenderDeviceDX10::RenderDeviceDX10(HWND hWnd)
+  RenderDeviceDX10::RenderDeviceDX10()
     : m_d3dDevice(NULL),
       m_swapChain(NULL),
-      m_hWnd(hWnd),
+      m_hWnd(0),
       m_renderTargetView(NULL)
   {
+  }
+
+  /***************************************************************************/
+  void
+  RenderDeviceDX10::init(HWND hWnd)
+  {
+    m_hWnd = hWnd;
     if( FAILED( D3D10CreateDevice( NULL, D3D10_DRIVER_TYPE_HARDWARE, NULL,
                                    0, D3D10_SDK_VERSION, &m_d3dDevice ) ) )
       throw Exception("RenderDeviceDX10::RenderDeviceDX10: Creating render device failed!\n");
   }
-
   /***************************************************************************/
   RenderDeviceDX10::~RenderDeviceDX10()
   {
